@@ -2,7 +2,7 @@
 	"manifest_version": 3,
 	"name": "Canvas Discussion Assistant",
 	"version": "1.0.0",
-	"description": "Generate Canvas discussion posts and replies using Claude AI. Copy to clipboard for manual editing and posting.",
+	"description": "Generate Canvas discussion posts and replies using Claude or Gemini AI. Copy to clipboard for manual editing and posting.",
 
 	"permissions": ["storage", "activeTab", "clipboardWrite"],
 
