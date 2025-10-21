@@ -15,15 +15,20 @@ A DOM scraper browser add-on for Canvas discussions that generates new posts and
 - UI Rework
 
 # Temporary Installation (Source)
-This add-on should be compatible with both Firefox and Chrome based browsers.agdad
+This add-on should be compatible with both Firefox and Chrome based browsers.
 
 ## Firefox Based
-1. `git clone https://github.com/chedsapp/canvas-discussion-assistant`.
-2. Navigate to `about:debugging`.
+1. `git clone https://github.com/chedsapp/canvas-discussion-assistant`
+2. Navigate to `about:debugging`
 3. Open the "This Firefox" menu.
-4. Hit `Load Temporary Add-on...`. This opens a file selector window.
+4. Hit `Load Temporary Add-on...`. This prompts you to select a file.
 5. Navigate to the repository's directory.
-6. Select `manifest.json` and hit open.
+6. Select `manifest.json`.
 
 ## Chrome Based
-I didn't make the chrome compatibility so idk
+1. `git clone https://github.com/chedsapp/canvas-discussion-assistant`
+2. Navigate to `chrome://extensions`
+3. Enable the Developer mode toggle in the top-right corner.
+4. Hit the `Load unpacked` button that appears on the left. This prompts you to select a directory.
+5. Navigate to the repository's directory.
+6. Select the entire parent directory. (the one containing `manifest.json`)
