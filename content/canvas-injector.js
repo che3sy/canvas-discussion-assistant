@@ -2,6 +2,7 @@
 
 (function () {
 	"use strict";
+	const browser = globalThis.browser || globalThis.chrome;
 
 	// Only run on discussion pages
 	if (!window.location.href.includes("/discussion_topics/")) {
@@ -50,11 +51,11 @@
 
 	async function checkApiKey() {
 		try {
-			if (!chrome.storage || !chrome.storage.local) {
+			if (!browser.storage || !browser.storage.local) {
 				return false;
 			}
 			const { aiProvider, claudeApiKey, geminiApiKey } =
-				await chrome.storage.local.get([
+				await browser.storage.local.get([
 					"aiProvider",
 					"claudeApiKey",
 					"geminiApiKey",
@@ -70,10 +71,10 @@
 	}
 
 	function showApiKeyPrompt() {
-		if (!chrome.storage || !chrome.storage.local) {
+		if (!browser.storage || !browser.storage.local) {
 			return;
 		}
-		chrome.storage.local.get(["aiProvider"], ({ aiProvider }) => {
+		browser.storage.local.get(["aiProvider"], ({ aiProvider }) => {
 			const message = document.createElement("div");
 			message.className = "canvas-assistant-notification";
 			let providerName = aiProvider === "gemini" ? "gemini" : "claude";
@@ -87,8 +88,8 @@
 			document.body.appendChild(message);
 			document.getElementById("openSettings").addEventListener("click", () => {
 				try {
-					chrome.runtime.sendMessage({ action: "openSettings" }, (res) => {
-						if (chrome.runtime.lastError) {
+					browser.runtime.sendMessage({ action: "openSettings" }, (res) => {
+						if (browser.runtime.lastError) {
 							alert(
 								"Extension context lost. Please refresh the page or reload the extension."
 							);
@@ -151,7 +152,7 @@
 
 	async function generateContent() {
 		try {
-			const settings = await chrome.storage.local.get([
+			const settings = await browser.storage.local.get([
 				"aiProvider",
 				"claudeApiKey",
 				"claudeModel",
@@ -175,7 +176,7 @@
 			let mainPostResponse;
 			try {
 				mainPostResponse = await new Promise((resolve, reject) => {
-					chrome.runtime.sendMessage(
+					browser.runtime.sendMessage(
 						{
 							action: "generateMainPost",
 							params: {
@@ -195,7 +196,7 @@
 							},
 						},
 						(response) => {
-							if (chrome.runtime.lastError) {
+							if (browser.runtime.lastError) {
 								reject(
 									new Error(
 										"Extension context lost. Please refresh the page or reload the extension."
@@ -226,7 +227,7 @@
 				let replyResponse;
 				try {
 					replyResponse = await new Promise((resolve, reject) => {
-						chrome.runtime.sendMessage(
+						browser.runtime.sendMessage(
 							{
 								action: "generateReply",
 								params: {
@@ -245,7 +246,7 @@
 								},
 							},
 							(response) => {
-								if (chrome.runtime.lastError) {
+								if (browser.runtime.lastError) {
 									reject(
 										new Error(
 											"Extension context lost. Please refresh the page or reload the extension."
@@ -445,14 +446,14 @@
 
 	async function saveToHistory(content) {
 		try {
-			const { postHistory } = await chrome.storage.local.get("postHistory");
+			const { postHistory } = await browser.storage.local.get("postHistory");
 			const history = postHistory || [];
 
 			history.unshift(content);
 
 			const trimmedHistory = history.slice(0, 20);
 
-			await chrome.storage.local.set({ postHistory: trimmedHistory });
+			await browser.storage.local.set({ postHistory: trimmedHistory });
 		} catch (error) {
 			// History saving shouldn't blow everything up
 		}

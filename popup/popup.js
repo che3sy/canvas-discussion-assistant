@@ -1,3 +1,6 @@
+// Cross-browser compatibility
+const browser = globalThis.browser || globalThis.chrome;
+
 // Help dropdown toggle for CSP compliance
 document.addEventListener("DOMContentLoaded", function () {
 	const toggle = document.getElementById("howToUseToggle");
@@ -49,7 +52,7 @@ aiProviderSelect.addEventListener("change", (e) => {
 // Load saved settings on popup open
 async function loadSettings() {
 	try {
-		const settings = await chrome.storage.local.get([
+		const settings = await browser.storage.local.get([
 			"aiProvider",
 			"claudeApiKey",
 			"claudeModel",
@@ -147,7 +150,7 @@ async function saveSettings(e) {
 	};
 
 	try {
-		await chrome.storage.local.set(settings);
+		await browser.storage.local.set(settings);
 		showStatus("settings saved successfully", "success");
 
 		// Close popup after 1 second or something
@@ -191,7 +194,7 @@ toggleHistoryBtn.addEventListener("click", () => {
 
 async function loadHistory() {
 	try {
-		const { postHistory } = await chrome.storage.local.get("postHistory");
+		const { postHistory } = await browser.storage.local.get("postHistory");
 		const history = postHistory || [];
 
 		if (history.length === 0) {
@@ -327,10 +330,10 @@ async function deleteHistoryItem(e) {
 	const index = parseInt(e.target.dataset.index);
 
 	try {
-		const { postHistory } = await chrome.storage.local.get("postHistory");
+		const { postHistory } = await browser.storage.local.get("postHistory");
 		const history = postHistory || [];
 		history.splice(index, 1);
-		await chrome.storage.local.set({ postHistory: history });
+		await browser.storage.local.set({ postHistory: history });
 		loadHistory();
 	} catch (error) {
 		// Silent fail
@@ -344,7 +347,7 @@ async function clearHistory() {
 		)
 	) {
 		try {
-			await chrome.storage.local.set({ postHistory: [] });
+			await browser.storage.local.set({ postHistory: [] });
 			loadHistory();
 		} catch (error) {
 			// Silent fail
