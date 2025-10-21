@@ -1,76 +1,76 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body {
-  font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
-  font-size: 13px;
-  line-height: 1.5;
-  color: #cccccc;
-  background: #000000;
-  width: 400px;
-  max-height: 600px;
-  overflow-y: auto;
+	font-family: "Courier New", "Monaco", "Consolas", monospace;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #cccccc;
+	background: #000000;
+	width: 400px;
+	max-height: 600px;
+	overflow-y: auto;
 }
 
 .container {
-  background: #000000;
-  min-height: 100vh;
+	background: #000000;
+	min-height: 100vh;
 }
 
 header {
-  background: #000000;
-  color: #cccccc;
-  padding: 16px;
-  border-bottom: 1px solid #333333;
+	background: #000000;
+	color: #cccccc;
+	padding: 16px;
+	border-bottom: 1px solid #333333;
 }
 
 header h1 {
-  font-size: 14px;
-  font-weight: normal;
-  margin-bottom: 4px;
-  color: #ffffff;
+	font-size: 14px;
+	font-weight: normal;
+	margin-bottom: 4px;
+	color: #ffffff;
 }
 
 .subtitle {
-  font-size: 12px;
-  color: #666666;
+	font-size: 12px;
+	color: #666666;
 }
 
 main {
-  padding: 16px;
+	padding: 16px;
 }
 
 .status-banner {
-  padding: 8px;
-  margin-bottom: 12px;
-  font-size: 12px;
-  border: 1px solid;
+	padding: 8px;
+	margin-bottom: 12px;
+	font-size: 12px;
+	border: 1px solid;
 }
 
 .status-banner.success {
-  background: #000000;
-  color: #00ff00;
-  border-color: #00ff00;
+	background: #000000;
+	color: #00ff00;
+	border-color: #00ff00;
 }
 
 .status-banner.error {
-  background: #000000;
-  color: #ff0000;
-  border-color: #ff0000;
+	background: #000000;
+	color: #ff0000;
+	border-color: #ff0000;
 }
 
 .form-group {
-  margin-bottom: 16px;
+	margin-bottom: 16px;
 }
 
 label {
-  display: block;
-  font-weight: normal;
-  margin-bottom: 4px;
-  color: #ffffff;
+	display: block;
+	font-weight: normal;
+	margin-bottom: 4px;
+	color: #ffffff;
 }
 
 input[type="text"],
@@ -78,18 +78,18 @@ input[type="password"],
 input[type="number"],
 select,
 textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #333333;
-  background: #000000;
-  color: #cccccc;
-  font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
-  font-size: 12px;
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #333333;
+	background: #000000;
+	color: #cccccc;
+	font-family: "Courier New", "Monaco", "Consolas", monospace;
+	font-size: 12px;
 }
 
 textarea {
-  resize: vertical;
-  min-height: 60px;
+	resize: vertical;
+	min-height: 60px;
 }
 
 input[type="text"]:focus,
@@ -97,235 +97,234 @@ input[type="password"]:focus,
 input[type="number"]:focus,
 select:focus,
 textarea:focus {
-  outline: none;
-  border-color: #ffffff;
+	outline: none;
+	border-color: #ffffff;
 }
 
 input[type="range"] {
-  width: 100%;
-  margin: 8px 0;
-  -webkit-appearance: none;
-  background: transparent;
+	width: 100%;
+	margin: 8px 0;
+	-webkit-appearance: none;
+	background: transparent;
 }
 
 input[type="range"]::-webkit-slider-track {
-  background: #333333;
-  height: 2px;
+	background: #333333;
+	height: 2px;
 }
 
 input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  background: #ffffff;
-  width: 12px;
-  height: 12px;
-  cursor: pointer;
+	-webkit-appearance: none;
+	background: #ffffff;
+	width: 12px;
+	height: 12px;
+	cursor: pointer;
 }
 
 input[type="range"]::-moz-range-track {
-  background: #333333;
-  height: 2px;
+	background: #333333;
+	height: 2px;
 }
 
 input[type="range"]::-moz-range-thumb {
-  background: #ffffff;
-  width: 12px;
-  height: 12px;
-  border: none;
-  cursor: pointer;
+	background: #ffffff;
+	width: 12px;
+	height: 12px;
+	border: none;
+	cursor: pointer;
 }
 
 .range-labels {
-  display: flex;
-  justify-content: space-between;
-  font-size: 11px;
-  color: #666666;
+	display: flex;
+	justify-content: space-between;
+	font-size: 11px;
+	color: #666666;
 }
 
 #temperatureValue {
-  font-weight: normal;
-  color: #ffffff;
+	font-weight: normal;
+	color: #ffffff;
 }
 
 small {
-  display: block;
-  margin-top: 4px;
-  color: #666666;
-  font-size: 11px;
+	display: block;
+	margin-top: 4px;
+	color: #666666;
+	font-size: 11px;
 }
 
 .btn {
-  padding: 8px 16px;
-  border: 1px solid #ffffff;
-  background: #000000;
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: normal;
-  font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
-  cursor: pointer;
-  width: 100%;
+	padding: 8px 16px;
+	border: 1px solid #ffffff;
+	background: #000000;
+	color: #ffffff;
+	font-size: 12px;
+	font-weight: normal;
+	font-family: "Courier New", "Monaco", "Consolas", monospace;
+	cursor: pointer;
+	width: 100%;
 }
 
 .btn-primary:hover {
-  background: #ffffff;
-  color: #000000;
+	background: #ffffff;
+	color: #000000;
 }
 
 .btn-primary:active {
-  background: #cccccc;
-  color: #000000;
+	background: #cccccc;
+	color: #000000;
 }
 
 .btn-link {
-  background: none;
-  border: none;
-  color: #ffffff;
-  text-decoration: underline;
-  cursor: pointer;
-  padding: 0;
-  font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
-  font-size: 12px;
+	background: none;
+	border: none;
+	color: #ffffff;
+	text-decoration: underline;
+	cursor: pointer;
+	padding: 0;
+	font-family: "Courier New", "Monaco", "Consolas", monospace;
+	font-size: 12px;
 }
 
 .btn-link:hover {
-  color: #cccccc;
+	color: #cccccc;
 }
 
 .history-section {
-  margin-top: 20px;
-  padding: 12px;
-  background: #000000;
-  border: 1px solid #333333;
+	margin-top: 20px;
+	padding: 12px;
+	background: #000000;
+	border: 1px solid #333333;
 }
 
 .history-section .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 8px;
 }
 
 .history-section .section-header p {
-  margin: 0;
+	margin: 0;
 }
 
 .empty-history {
-  color: #666666;
-  font-size: 12px;
-  text-align: center;
-  padding: 12px 0;
+	color: #666666;
+	font-size: 12px;
+	text-align: center;
+	padding: 12px 0;
 }
 
 .history-item {
-  border: 1px solid #333333;
-  padding: 8px;
-  margin-bottom: 8px;
-  font-size: 11px;
+	border: 1px solid #333333;
+	padding: 8px;
+	margin-bottom: 8px;
+	font-size: 11px;
 }
 
 .history-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-  padding-bottom: 4px;
-  border-bottom: 1px solid #333333;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 4px;
+	padding-bottom: 4px;
+	border-bottom: 1px solid #333333;
 }
 
 .history-topic {
-  color: #ffffff;
-  font-weight: normal;
-  flex: 1;
-  margin-right: 8px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+	color: #ffffff;
+	font-weight: normal;
+	flex: 1;
+	margin-right: 8px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .history-time {
-  color: #666666;
-  font-size: 10px;
-  white-space: nowrap;
+	color: #666666;
+	font-size: 10px;
+	white-space: nowrap;
 }
 
 .history-content {
-  color: #999999;
-  margin: 4px 0;
-  max-height: 60px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1.4;
+	color: #999999;
+	margin: 4px 0;
+	max-height: 60px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 1.4;
 }
 
 .history-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
+	display: flex;
+	gap: 8px;
+	margin-top: 4px;
 }
 
 .history-actions button {
-  background: none;
-  border: 1px solid #666666;
-  color: #cccccc;
-  padding: 2px 6px;
-  font-size: 10px;
-  cursor: pointer;
-  font-family: 'Courier New', 'Monaco', 'Consolas', monospace;
+	background: none;
+	border: 1px solid #666666;
+	color: #cccccc;
+	padding: 2px 6px;
+	font-size: 10px;
+	cursor: pointer;
+	font-family: "Courier New", "Monaco", "Consolas", monospace;
 }
 
 .history-actions button:hover {
-  border-color: #ffffff;
-  color: #ffffff;
+	border-color: #ffffff;
+	color: #ffffff;
 }
 
 .help-section {
-  margin-top: 20px;
-  padding: 12px;
-  background: #000000;
-  border: 1px solid #333333;
-  font-size: 12px;
+	background: #000000;
+	padding: 12px;
+	border-bottom: 1px solid #333333;
+	font-size: 12px;
 }
 
 .help-section p {
-  margin-bottom: 8px;
+	margin-bottom: 8px;
 }
 
 .help-section ol {
-  margin-left: 16px;
-  margin-bottom: 8px;
+	margin-left: 16px;
+	margin-bottom: 8px;
 }
 
 .help-section li {
-  margin-bottom: 4px;
-  color: #999999;
+	margin-bottom: 4px;
+	color: #999999;
 }
 
 .help-link {
-  margin-top: 8px;
-  text-align: center;
+	margin-top: 8px;
+	text-align: center;
 }
 
 .help-link a {
-  color: #ffffff;
-  text-decoration: none;
+	color: #ffffff;
+	text-decoration: none;
 }
 
 .help-link a:hover {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 /* scrollbar styling */
 ::-webkit-scrollbar {
-  width: 8px;
+	width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #000000;
+	background: #000000;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333333;
+	background: #333333;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #666666;
+	background: #666666;
 }
