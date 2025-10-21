@@ -1,7 +1,10 @@
 # Canvas Discussion Assistant
 A DOM scraper browser add-on for Canvas discussions that generates new posts and replies based on pre-existing ones.
 
-## Features
+---
+<img width="239" height="422" alt="image" src="https://github.com/user-attachments/assets/fdef9035-8e56-4aa2-8b8d-13f9bc1c6fce" /> <img width="239" height="422" alt="image" src="https://github.com/user-attachments/assets/df5b51d4-a512-4208-b20b-738a7444d63b" />
+
+## Details
 - Generates (given) n number of discussion replies to random posts (n>=0)
 - Recently generated posts+reply sets will be saved. They can be viewed and deleted in the configuration popup.
 - Automatically searches for teacher defined requirements (e.g word count, character account)
