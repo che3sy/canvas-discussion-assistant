@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>canvas discussion assistant</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>canvas discussion assistant</h1>
+      <p class="subtitle">configure your claude api settings</p>
+    </header>
+
+    <main>
+      <div class="status-banner" id="statusBanner" style="display: none;"></div>
+
+      <form id="settingsForm">
+        <div class="form-group">
+          <label for="apiKey">claude api key *</label>
+          <input
+            type="password"
+            id="apiKey"
+            placeholder="sk-ant-api..."
+            required
+          >
+          <small>your api key is stored locally and never shared</small>
+        </div>
+
+        <div class="form-group">
+          <label for="model">model</label>
+          <select id="model">
+            <option value="claude-3-5-sonnet-20240620">claude 3.5 sonnet (recommended)</option>
+            <option value="claude-3-5-haiku-20241022">claude 3.5 haiku (faster)</option>
+            <option value="claude-3-opus-20240229">claude 3 opus</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="replyCount">number of replies to generate</label>
+          <input
+            type="number"
+            id="replyCount"
+            min="0"
+            max="10"
+            value="3"
+          >
+          <small>how many replies to random posts (0-10, 0 = main post only)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="temperature">creativity (temperature)</label>
+          <input
+            type="range"
+            id="temperature"
+            min="0"
+            max="1"
+            step="0.1"
+            value="0.7"
+          >
+          <div class="range-labels">
+            <span>focused (0.0)</span>
+            <span id="temperatureValue">0.7</span>
+            <span>creative (1.0)</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="maxTokens">max response length</label>
+          <input
+            type="number"
+            id="maxTokens"
+            min="100"
+            max="4096"
+            step="100"
+            value="1000"
+          >
+          <small>maximum tokens per response (100-4096)</small>
+        </div>
+
+        <div class="form-group">
+          <label for="sideInstructions">additional instructions (optional)</label>
+          <textarea
+            id="sideInstructions"
+            rows="4"
+            placeholder="e.g., write in a casual style, use shorter sentences, avoid specific topics..."
+          ></textarea>
+          <small>extra guidance for writing style, tone, or content preferences</small>
+        </div>
+
+        <button type="submit" class="btn btn-primary">save settings</button>
+      </form>
+
+      <div class="history-section">
+        <div class="section-header">
+          <p><strong>recent posts</strong></p>
+          <button id="toggleHistory" class="btn-link">show history</button>
+        </div>
+        <div id="historyContent" style="display: none;">
+          <p class="empty-history">no posts generated yet</p>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <p><strong>how to use:</strong></p>
+        <ol>
+          <li>enter your claude api key above</li>
+          <li>navigate to a canvas discussion page</li>
+          <li>click the extension icon on the page</li>
+          <li>review and copy generated content</li>
+          <li>paste and edit in canvas before posting</li>
+        </ol>
+        <p class="help-link">
+          <a href="https://console.anthropic.com/settings/keys" target="_blank">
+            get your api key →
+          </a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
