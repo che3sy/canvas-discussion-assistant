@@ -1,32 +1,14 @@
-/* floating button */
-.canvas-assistant-fab {
-	position: fixed;
-	bottom: 24px;
-	right: 24px;
-	background: #000000;
-	color: #ffffff;
-	border: 1px solid #ffffff;
-	padding: 12px 20px;
-	font-size: 12px;
-	font-weight: normal;
-	font-family: "Courier New", "Monaco", "Consolas", monospace;
-	cursor: pointer;
-	z-index: 9999;
-	display: flex;
-	align-items: center;
-	gap: 8px;
+.canvas-assistant-generate-btn {
+	transition: opacity 0.2s ease;
 }
 
-.canvas-assistant-fab:hover {
-	background: #ffffff;
-	color: #000000;
-	outline: 2px solid #000000;
-	outline-offset: -2px;
+.canvas-assistant-generate-btn:hover {
+	opacity: 0.8;
 }
 
-.canvas-assistant-fab svg {
-	width: 16px;
-	height: 16px;
+.canvas-assistant-generate-btn svg {
+	fill: none;
+	stroke: currentColor;
 }
 
 /* notification */
@@ -296,17 +278,6 @@
 	.overlay-panel {
 		width: 95%;
 		max-height: 95vh;
-	}
-
-	.canvas-assistant-fab span {
-		display: none;
-	}
-
-	.canvas-assistant-fab {
-		width: 48px;
-		height: 48px;
-		padding: 0;
-		justify-content: center;
 	}
 
 	.section-header {

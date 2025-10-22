@@ -141,17 +141,101 @@ const CanvasParser = {
 					'[data-resource-type="discussion_topic.body"]'
 				);
 				if (!isMainTopic) {
+					// Determine if this is a top-level post or nested reply
+					const container = element.querySelector('[data-testid="discussion-entry-container"]');
+					const isTopLevel = container && container.style.marginLeft === 'calc(0rem)';
+
 					posts.push({
 						author,
 						content,
 						element,
 						index,
+						isTopLevel,
+						entryId: element.getAttribute('data-entry-id'),
 					});
 				}
 			}
 		});
 
 		return posts;
+	},
+
+	getTopLevelPosts() {
+		return this.getStudentPosts().filter(post => post.isTopLevel);
+	},
+
+	getNestedReplies(parentElement) {
+		const replies = [];
+
+		const parentContainer = parentElement.closest('[data-testid="notHighlighted"]');
+		if (!parentContainer || !parentContainer.parentElement) {
+			return replies;
+		}
+
+		let nextElement = parentContainer.nextElementSibling;
+
+		if (nextElement) {
+			const nestedEntries = nextElement.querySelectorAll('[data-entry-id]');
+			nestedEntries.forEach(entryElement => {
+				const container = entryElement.querySelector('[data-testid="discussion-entry-container"]');
+				// Check if it's indented (margin-left > 0)
+				if (container && container.style.marginLeft !== 'calc(0rem)') {
+					const authorNameElement = entryElement.querySelector('[data-testid="author_name"]');
+					let author = 'Unknown';
+					if (authorNameElement) {
+						const authorSpan = authorNameElement.querySelector('span.user_content.enhanced, a span.user_content.enhanced');
+						author = authorSpan ? authorSpan.textContent.trim() : authorNameElement.textContent.trim();
+					}
+
+					const contentElement = entryElement.querySelector('.userMessage .user_content.enhanced[data-resource-type="discussion_topic.reply"]');
+					let content = '';
+					if (contentElement) {
+						content = contentElement.textContent.trim();
+					}
+
+					if (content && content.length > 10) {
+						replies.push({
+							author,
+							content,
+							entryId: entryElement.getAttribute('data-entry-id'),
+						});
+					}
+				}
+			});
+		}
+
+		return replies;
+	},
+
+	getPostContext(entryId) {
+		const postElement = document.querySelector(`[data-entry-id="${entryId}"]`);
+		if (!postElement) {
+			return null;
+		}
+
+		const posts = this.getStudentPosts();
+		const targetPost = posts.find(p => p.entryId === entryId);
+
+		if (!targetPost) {
+			return null;
+		}
+
+		const nestedReplies = this.getNestedReplies(postElement);
+
+		return {
+			post: targetPost,
+			nestedReplies,
+		};
+	},
+
+	getMainDiscussionContext() {
+		return {
+			topic: this.getDiscussionTopic(),
+			teacherInstructions: this.getTeacherInstructions(),
+			requirements: this.getRequirements(),
+			courseName: this.getCourseName(),
+			topLevelPosts: this.getTopLevelPosts(),
+		};
 	},
 
 	getRandomPosts(count) {

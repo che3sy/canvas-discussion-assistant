@@ -8,7 +8,8 @@
 
 	"host_permissions": [
 		"https://*.instructure.com/*",
-		"https://api.anthropic.com/*"
+		"https://api.anthropic.com/*",
+		"https://generativelanguage.googleapis.com/*"
 	],
 
 	"content_scripts": [
@@ -26,7 +27,7 @@
 	},
 
 	"background": {
-		"service_worker": "background/service-worker.js"
+		"scripts": ["lib/gemini-api.js", "background/service-worker.js"]
 	},
 
 	"web_accessible_resources": [
@@ -38,5 +39,14 @@
 	"action": {
 		"default_popup": "popup/popup.html"
 	},
-	"options_page": "popup/popup.html"
+	"options_ui": {
+		"page": "popup/popup.html",
+		"open_in_tab": false
+	},
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "canvas-discussion-assistant@anthropic.com",
+			"strict_min_version": "109.0"
+		}
+	}
 }

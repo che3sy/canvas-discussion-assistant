@@ -1,12 +1,14 @@
 // Background worker
 // Handles API calls to avoid annoyinhg CORS issues
 
+// Cross-browser compatibility
+const browser = globalThis.browser || globalThis.chrome;
+
 // Claude stuff
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
 const CLAUDE_API_VERSION = "2023-06-01";
 
-// Gemini handler
-importScripts("../lib/gemini-api.js");
+// Gemini handler loaded via manifest.json background.scripts
 
 async function callClaudeAPI({
 	apiKey,
@@ -209,9 +211,9 @@ async function generateReply(params) {
 	}
 }
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if (message.action === "openSettings") {
-		chrome.runtime.openOptionsPage();
+		browser.runtime.openOptionsPage();
 		return true;
 	}
 
@@ -227,8 +229,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 // Handle extension installation
-chrome.runtime.onInstalled.addListener((details) => {
+browser.runtime.onInstalled.addListener((details) => {
 	if (details.reason === "install") {
-		chrome.runtime.openOptionsPage();
+		browser.runtime.openOptionsPage();
 	}
 });

@@ -17,41 +17,28 @@
 				<p class="subtitle">configure your api settings</p>
 			</header>
 			<div class="help-section">
-				<p><strong>how to use:</strong></p>
-				<ol>
+				<p><strong>setup:</strong></p>
+				<ul>
 					<li>
-						enter your Claude or Gemini API key below
-						<ul>
-							<li>
-								The Gemini API key is free, sign up for a key here:
-
-								<p class="help-link">
-									<a
-										href="https://aistudio.google.com/api-keys"
-										target="_blank">
-										get your Gemini api key →
-									</a>
-								</p>
-							</li>
-							<li
-								>The Claude API costs money, here is the link below to sign up
-								for an account and get an API key.
-
-								<p class="help-link">
-									<a
-										href="https://console.anthropic.com/settings/keys"
-										target="_blank">
-										get your Claude api key →
-									</a>
-								</p>
-							</li>
-						</ul>
+						<strong>Gemini API (free):</strong>
+						<a
+							href="https://aistudio.google.com/api-keys"
+							target="_blank"
+							class="help-link">
+							get your key →
+						</a>
 					</li>
-					<li>navigate to a canvas discussion page</li>
-					<li>click the extension icon on the page</li>
-					<li>review and copy generated content</li>
-					<li>paste and edit in canvas before posting</li>
-				</ol>
+					<li>
+						<strong>Claude API (paid):</strong>
+						<a
+							href="https://console.anthropic.com/settings/keys"
+							target="_blank"
+							class="help-link">
+							get your key →
+						</a>
+					</li>
+				</ul>
+				<p><strong>usage:</strong> Navigate to a Canvas discussion and click the "Generate Response" or "Generate Reply" buttons next to Reply buttons.</p>
 			</div>
 			<main>
 				<div
@@ -127,21 +114,6 @@
 							<option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
 							<option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
 						</select>
-					</div>
-
-					<div class="form-group">
-						<label for="replyCount">number of replies to generate</label>
-						<input
-							type="number"
-							id="replyCount"
-							name="replyCount"
-							min="0"
-							max="10"
-							value="3" />
-						<small
-							>how many replies to random posts (0-10, 0 = main post
-							only)</small
-						>
 					</div>
 
 					<div class="form-group">
