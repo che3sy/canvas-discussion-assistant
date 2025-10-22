@@ -1,18 +1,21 @@
 # Canvas Discussion Assistant
-A DOM scraper browser add-on for Canvas discussions that generates new posts and replies based on pre-existing ones.
+<img width="1187" height="112" alt="image" src="https://github.com/user-attachments/assets/68be45f0-eb0e-4226-8936-c294ae021fb0" />
+<img width="671" height="142" alt="image" src="https://github.com/user-attachments/assets/bf0536f0-814d-4cc7-90ec-5e989128f60e" />
 
----
-<img width="239" height="422" alt="image" src="https://github.com/user-attachments/assets/fdef9035-8e56-4aa2-8b8d-13f9bc1c6fce" /> <img width="239" height="422" alt="image" src="https://github.com/user-attachments/assets/df5b51d4-a512-4208-b20b-738a7444d63b" />
+A browser add-on for Canvas discussions that generates new posts and replies for you.
+
+Generating a discussion response scrapes the teacher instructions and any other responses currently loaded to the discussion.
+Replying to a post scrapes the teacher instructions and any other pre-existing replies to the post.
 
 ## Details
 - Generates (given) n number of discussion replies to random posts (n>=0)
 - Recently generated posts+reply sets will be saved. They can be viewed and deleted in the configuration popup.
 - Automatically searches for teacher defined requirements (e.g word count, character account)
 
-### Planned Features & Reworks
-- Multi-page support
-- Ability to copy individual replies from history
-- UI Rework
+## Features
+- Adds new "Generate Response" and "Generate Reply" buttons for discussion boards.
+- Recently generated replies will be saved. They can be viewed, copied, and deleted in the extension popup.
+- Supports API usage for both Gemini and Claude.
 
 # Temporary Installation (Source)
 This add-on should be compatible with both Firefox and Chrome based browsers.

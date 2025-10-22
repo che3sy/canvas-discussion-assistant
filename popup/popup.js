@@ -19,7 +19,7 @@ const apiKeyInput = document.getElementById("apiKey");
 const geminiApiKeyInput = document.getElementById("geminiApiKey");
 const modelSelect = document.getElementById("model");
 const geminiModelSelect = document.getElementById("geminiModel");
-const replyCountInput = document.getElementById("replyCount");
+// We dont need replycoundt anymore
 const temperatureInput = document.getElementById("temperature");
 const temperatureValue = document.getElementById("temperatureValue");
 const maxTokensInput = document.getElementById("maxTokens");
@@ -58,7 +58,6 @@ async function loadSettings() {
 			"claudeModel",
 			"geminiApiKey",
 			"geminiModel",
-			"replyCount",
 			"temperature",
 			"maxTokens",
 			"sideInstructions",
@@ -76,9 +75,6 @@ async function loadSettings() {
 		}
 		if (settings.geminiModel) {
 			geminiModelSelect.value = settings.geminiModel;
-		}
-		if (settings.replyCount) {
-			replyCountInput.value = settings.replyCount;
 		}
 		if (settings.temperature !== undefined) {
 			temperatureInput.value = settings.temperature;
@@ -143,7 +139,6 @@ async function saveSettings(e) {
 		claudeModel,
 		geminiApiKey,
 		geminiModel,
-		replyCount: parseInt(replyCountInput.value, 10),
 		temperature: parseFloat(temperatureInput.value),
 		maxTokens: parseInt(maxTokensInput.value, 10),
 		sideInstructions: sideInstructionsInput.value.trim(),
@@ -203,42 +198,43 @@ async function loadHistory() {
 			return;
 		}
 
-		let html = "";
+		let html = '<ul class="history-list">';
+
 		history.forEach((item, index) => {
 			if (!item) return;
 			const date = new Date(item.timestamp || Date.now());
-			const topic = typeof item.topic === "string" ? item.topic : "";
+			const topic = typeof item.topic === "string" ? item.topic : "untitled";
 			const mainPost = typeof item.mainPost === "string" ? item.mainPost : "";
 			const replies = Array.isArray(item.replies) ? item.replies : [];
 			const timeStr = formatTime(date);
-			const topicPreview = topic
-				? topic.substring(0, 50) + (topic.length > 50 ? "..." : "")
-				: "untitled";
-			const contentPreview = mainPost
-				? mainPost.substring(0, 100) + (mainPost.length > 100 ? "..." : "")
-				: "";
+
+			const isMainPost = mainPost && mainPost.length > 0;
+			const replyTo = !isMainPost && replies.length > 0 && replies[0].replyTo
+				? replies[0].replyTo
+				: null;
+
+			const content = isMainPost ? mainPost : (replies[0]?.content || "");
+
+			let replyLabel = isMainPost ? "main post" : (replyTo ? `reply to ${replyTo}` : "reply");
 
 			html += `
-        <div class="history-item">
-          <div class="history-item-header">
-            <span class="history-topic" title="${escapeHtml(
-							item.topic || "untitled"
-						)}">${escapeHtml(topicPreview)}</span>
-            <span class="history-time">${timeStr}</span>
-          </div>
-          <div class="history-content">${escapeHtml(contentPreview)}</div>
-          <div class="history-actions">
-            <button data-index="${index}" class="copy-post-btn">copy main post</button>
-            ${
-							replies.length > 0
-								? `<button data-index="${index}" class="copy-all-btn">copy all</button>`
-								: ""
-						}
-            <button data-index="${index}" class="delete-btn">delete</button>
-          </div>
-        </div>
-      `;
+				<li class="history-item">
+					<div class="history-meta">
+						<span class="history-type">${escapeHtml(replyLabel)}</span>
+						<span class="history-separator">•</span>
+						<span class="history-topic" title="${escapeHtml(topic)}">${escapeHtml(topic.substring(0, 40) + (topic.length > 40 ? "..." : ""))}</span>
+						<span class="history-separator">•</span>
+						<span class="history-time">${timeStr}</span>
+					</div>
+					<div class="history-actions">
+						<button data-index="${index}" class="copy-text-btn">copy text</button>
+						<button data-index="${index}" class="delete-btn">delete</button>
+					</div>
+				</li>
+			`;
 		});
+
+		html += '</ul>';
 
 		// Add clear all button
 		html +=
@@ -246,12 +242,8 @@ async function loadHistory() {
 
 		historyContent.innerHTML = html;
 
-		document.querySelectorAll(".copy-post-btn").forEach((btn) => {
-			btn.addEventListener("click", (e) => copyHistoryPost(e, history));
-		});
-
-		document.querySelectorAll(".copy-all-btn").forEach((btn) => {
-			btn.addEventListener("click", (e) => copyHistoryAll(e, history));
+		document.querySelectorAll(".copy-text-btn").forEach((btn) => {
+			btn.addEventListener("click", (e) => copyHistoryText(e, history));
 		});
 
 		document.querySelectorAll(".delete-btn").forEach((btn) => {
@@ -287,39 +279,21 @@ function escapeHtml(text) {
 	return div.innerHTML;
 }
 
-async function copyHistoryPost(e, history) {
+async function copyHistoryText(e, history) {
 	const index = parseInt(e.target.dataset.index);
 	const item = history[index];
 
-	try {
-		await navigator.clipboard.writeText(item.mainPost);
-		e.target.textContent = "✓ copied";
-		setTimeout(() => {
-			e.target.textContent = "copy main post";
-		}, 2000);
-	} catch (error) {
-		// Silent fail
-	}
-}
-
-async function copyHistoryAll(e, history) {
-	const index = parseInt(e.target.dataset.index);
-	const item = history[index];
-
-	let allText = `MAIN POST:\n${item.mainPost}\n\n`;
-	if (item.replies && item.replies.length > 0) {
-		item.replies.forEach((reply, idx) => {
-			allText += `REPLY ${idx + 1}${
-				reply.replyTo ? ` (to ${reply.replyTo})` : ""
-			}:\n${reply.content}\n\n`;
-		});
-	}
+	const mainPost = typeof item.mainPost === "string" ? item.mainPost : "";
+	const replies = Array.isArray(item.replies) ? item.replies : [];
+	const content = mainPost && mainPost.length > 0
+		? mainPost
+		: (replies[0]?.content || "");
 
 	try {
-		await navigator.clipboard.writeText(allText);
+		await navigator.clipboard.writeText(content);
 		e.target.textContent = "✓ copied";
 		setTimeout(() => {
-			e.target.textContent = "copy all";
+			e.target.textContent = "copy text";
 		}, 2000);
 	} catch (error) {
 		// Silent fail
