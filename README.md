@@ -7,11 +7,6 @@ A browser add-on for Canvas discussions that generates new posts and replies for
 Generating a discussion response scrapes the teacher instructions and any other responses currently loaded to the discussion.
 Replying to a post scrapes the teacher instructions and any other pre-existing replies to the post.
 
-## Details
-- Generates (given) n number of discussion replies to random posts (n>=0)
-- Recently generated posts+reply sets will be saved. They can be viewed and deleted in the configuration popup.
-- Automatically searches for teacher defined requirements (e.g word count, character account)
-
 ## Features
 - Adds new "Generate Response" and "Generate Reply" buttons for discussion boards.
 - Recently generated replies will be saved. They can be viewed, copied, and deleted in the extension popup.
