@@ -30,7 +30,7 @@
 		injectPostReplyButtons();
 	}
 
-	// Find the first span that contains "Mark as" 
+	// Find the first span that contains "Mark as"
 	function findMarkAsClasses(scope) {
 		try {
 			const container = scope || document;
@@ -80,8 +80,7 @@
 					}
 				}
 			}
-		} catch (e) {
-		}
+		} catch (e) {}
 		return { textClass: null, buttonClass: null };
 	}
 
@@ -112,7 +111,7 @@
 			mainButtonClass = null;
 		}
 
-		// Use the host "Mark as" span/button classes 
+		// Use the host "Mark as" span/button classes
 		const mainClasses = findMarkAsClasses();
 		const mainTextClass = mainClasses.textClass;
 		const mainBtnClassFromHost = mainClasses.buttonClass || mainButtonClass;
