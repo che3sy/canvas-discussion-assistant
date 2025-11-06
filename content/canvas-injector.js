@@ -30,6 +30,61 @@
 		injectPostReplyButtons();
 	}
 
+	// Find the first span that contains "Mark as" 
+	function findMarkAsClasses(scope) {
+		try {
+			const container = scope || document;
+			const spans = Array.from(container.querySelectorAll("span"));
+			const testSpan = (s, textMatch, requireAttrs) => {
+				if (!s || !s.textContent) return false;
+				const txt = s.textContent.trim().toLowerCase();
+				if (textMatch === "exact-mark-unread") {
+					if (txt !== "mark as unread" && txt !== "mark as read") return false;
+				} else if (textMatch === "includes-mark") {
+					if (!txt.includes("mark as")) return false;
+				} else if (textMatch === "exact-reply") {
+					if (txt !== "reply") return false;
+				}
+				if (requireAttrs) {
+					const hasWrap = s.hasAttribute("wrap");
+					const hasLetter = s.hasAttribute("letter-spacing");
+					return hasWrap || hasLetter;
+				}
+				return true;
+			};
+
+			const attempts = [
+				{ mode: "exact-mark-unread", requireAttrs: true },
+				{ mode: "includes-mark", requireAttrs: true },
+				{ mode: "exact-reply", requireAttrs: true },
+				{ mode: "exact-mark-unread", requireAttrs: false },
+				{ mode: "includes-mark", requireAttrs: false },
+				{ mode: "exact-reply", requireAttrs: false },
+			];
+
+			for (const attempt of attempts) {
+				for (const s of spans) {
+					if (testSpan(s, attempt.mode, attempt.requireAttrs)) {
+						const textClass =
+							s.className &&
+							typeof s.className === "string" &&
+							s.className.trim()
+								? s.className
+								: null;
+						const btn = s.closest("button");
+						const buttonClass =
+							btn && btn.className
+								? btn.className + " canvas-assistant-generate-btn"
+								: null;
+						return { textClass, buttonClass };
+					}
+				}
+			}
+		} catch (e) {
+		}
+		return { textClass: null, buttonClass: null };
+	}
+
 	function injectMainDiscussionButton() {
 		const mainReplyButton = document.querySelector(
 			'button[data-testid="discussion-topic-reply"]'
@@ -47,10 +102,34 @@
 			return;
 		}
 
-		const ourButton = createGenerateButton("main", null);
+		let mainButtonClass = null;
+		try {
+			if (mainReplyButton && mainReplyButton.className) {
+				mainButtonClass =
+					mainReplyButton.className + " canvas-assistant-generate-btn";
+			}
+		} catch (e) {
+			mainButtonClass = null;
+		}
 
-		const replyButtonContainer = mainReplyButton.closest('.discussion-topic-reply-button');
-		const flexItem = replyButtonContainer ? replyButtonContainer.parentElement : null;
+		// Use the host "Mark as" span/button classes 
+		const mainClasses = findMarkAsClasses();
+		const mainTextClass = mainClasses.textClass;
+		const mainBtnClassFromHost = mainClasses.buttonClass || mainButtonClass;
+
+		const ourButton = createGenerateButton(
+			"main",
+			null,
+			mainTextClass,
+			mainBtnClassFromHost
+		);
+
+		const replyButtonContainer = mainReplyButton.closest(
+			".discussion-topic-reply-button"
+		);
+		const flexItem = replyButtonContainer
+			? replyButtonContainer.parentElement
+			: null;
 
 		if (flexItem && flexItem.parentElement) {
 			// Canvas does a flexbox list
@@ -83,7 +162,9 @@
 				return;
 			}
 
-			if (toolbar.querySelector(`[data-canvas-assistant-entry-id="${entryId}"]`)) {
+			if (
+				toolbar.querySelector(`[data-canvas-assistant-entry-id="${entryId}"]`)
+			) {
 				return;
 			}
 			const listItem = replyButton.closest("li");
@@ -91,7 +172,17 @@
 				return;
 			}
 
-			const ourButton = createGenerateButton("post", entryId);
+			// Find host styling classes for the toolbar (prefer 'Mark as' span)
+			const classes = findMarkAsClasses(toolbar);
+			const textClass = classes.textClass;
+			const buttonClass = classes.buttonClass;
+
+			const ourButton = createGenerateButton(
+				"post",
+				entryId,
+				textClass,
+				buttonClass
+			);
 
 			const newListItem = document.createElement("li");
 			if (listItem.className) {
@@ -112,7 +203,7 @@
 		});
 	}
 
-	function createGenerateButton(type, entryId) {
+	function createGenerateButton(type, entryId, textClass, buttonClass) {
 		const span = document.createElement("span");
 		span.setAttribute("dir", "ltr");
 		span.setAttribute("class", "css-owgq4n-view");
@@ -124,7 +215,12 @@
 		const button = document.createElement("button");
 		button.setAttribute("dir", "ltr");
 		button.setAttribute("type", "button");
-		button.setAttribute("class", "css-1w1xonf-view--inlineBlock-link canvas-assistant-generate-btn");
+
+		const defaultButtonClass =
+			"css-1w1xonf-view--inlineBlock-link canvas-assistant-generate-btn";
+		const finalButtonClass =
+			buttonClass && buttonClass.trim() ? buttonClass : defaultButtonClass;
+		button.setAttribute("class", finalButtonClass);
 		button.setAttribute("data-button-type", type);
 		if (entryId) {
 			button.setAttribute("data-canvas-assistant-entry-id", entryId);
@@ -147,10 +243,19 @@
 		svg.setAttribute("focusable", "false");
 		svg.setAttribute("class", "css-1xnn9jb-inlineSVG-svgIcon");
 
-		const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-		path1.setAttribute("d", "M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z");
+		const path1 = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"path"
+		);
+		path1.setAttribute(
+			"d",
+			"M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"
+		);
 
-		const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+		const path2 = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"path"
+		);
 		path2.setAttribute("d", "M19 16l1 2 2 1-2 1-1 2-1-2-2-1 2-1z");
 
 		svg.appendChild(path1);
@@ -170,7 +275,8 @@
 		visibleSpan.setAttribute("aria-hidden", "true");
 
 		const textSpan = document.createElement("span");
-		textSpan.setAttribute("class", "css-g5lcut-text");
+		// Apply the discovered text class when available otherwise fall back
+		textSpan.setAttribute("class", textClass || "css-g5lcut-text");
 		textSpan.setAttribute("wrap", "normal");
 		textSpan.setAttribute("letter-spacing", "normal");
 		textSpan.textContent =
@@ -344,34 +450,34 @@
 				contextSummary =
 					"\n\nExisting posts in this discussion:\n" +
 					context.topLevelPosts
-						.map((p, i) => `${i + 1}. ${p.author}: ${p.content.substring(0, 200)}...`)
+						.map(
+							(p, i) =>
+								`${i + 1}. ${p.author}: ${p.content.substring(0, 200)}...`
+						)
 						.join("\n");
 			}
 
 			// Generate main post via background script
 			let mainPostResponse;
 			try {
+				const requestParams = {
+					aiProvider: settings.aiProvider || "claude",
+					claudeApiKey: settings.claudeApiKey,
+					claudeModel: settings.claudeModel || "claude-3-5-sonnet-20240620",
+					geminiApiKey: settings.geminiApiKey,
+					geminiModel: settings.geminiModel || "gemini-2.5-pro",
+					topic: context.topic,
+					teacherInstructions: context.teacherInstructions + contextSummary,
+					courseName: context.courseName,
+					requirements: context.requirements,
+					sideInstructions: settings.sideInstructions || "",
+					temperature: settings.temperature ?? 0.7,
+					maxTokens: settings.maxTokens ?? 1000,
+				};
+
 				mainPostResponse = await new Promise((resolve, reject) => {
 					browser.runtime.sendMessage(
-						{
-							action: "generateMainPost",
-							params: {
-								aiProvider: settings.aiProvider || "claude",
-								claudeApiKey: settings.claudeApiKey,
-								claudeModel:
-									settings.claudeModel || "claude-3-5-sonnet-20240620",
-								geminiApiKey: settings.geminiApiKey,
-								geminiModel: settings.geminiModel || "gemini-2.5-pro",
-								topic: context.topic,
-								teacherInstructions:
-									context.teacherInstructions + contextSummary,
-								courseName: context.courseName,
-								requirements: context.requirements,
-								sideInstructions: settings.sideInstructions || "",
-								temperature: settings.temperature ?? 0.7,
-								maxTokens: settings.maxTokens ?? 1000,
-							},
-						},
+						{ action: "generateMainPost", params: requestParams },
 						(response) => {
 							if (browser.runtime.lastError) {
 								reject(
@@ -399,6 +505,11 @@
 			generatedContent = {
 				type: "main",
 				content: mainPostResponse.text,
+				meta: {
+					finishReason: mainPostResponse.finishReason,
+					usage: mainPostResponse.usageMetadata,
+				},
+				lastRequestParams: requestParams,
 			};
 
 			await saveToHistory({
@@ -446,25 +557,23 @@
 
 			let replyResponse;
 			try {
+				const requestParams = {
+					aiProvider: settings.aiProvider || "claude",
+					claudeApiKey: settings.claudeApiKey,
+					claudeModel: settings.claudeModel || "claude-3-5-sonnet-20240620",
+					geminiApiKey: settings.geminiApiKey,
+					geminiModel: settings.geminiModel || "gemini-2.5-pro",
+					originalPost: fullContext,
+					authorName: context.post.author,
+					topic: mainContext.topic,
+					sideInstructions: settings.sideInstructions || "",
+					temperature: settings.temperature ?? 0.7,
+					maxTokens: settings.maxTokens ?? 1000,
+				};
+
 				replyResponse = await new Promise((resolve, reject) => {
 					browser.runtime.sendMessage(
-						{
-							action: "generateReply",
-							params: {
-								aiProvider: settings.aiProvider || "claude",
-								claudeApiKey: settings.claudeApiKey,
-								claudeModel:
-									settings.claudeModel || "claude-3-5-sonnet-20240620",
-								geminiApiKey: settings.geminiApiKey,
-								geminiModel: settings.geminiModel || "gemini-2.5-pro",
-								originalPost: fullContext,
-								authorName: context.post.author,
-								topic: mainContext.topic,
-								sideInstructions: settings.sideInstructions || "",
-								temperature: settings.temperature ?? 0.7,
-								maxTokens: settings.maxTokens ?? 1000,
-							},
-						},
+						{ action: "generateReply", params: requestParams },
 						(response) => {
 							if (browser.runtime.lastError) {
 								reject(
@@ -492,6 +601,11 @@
 				content: replyResponse.text,
 				replyTo: context.post.author,
 				entryId: entryId,
+				meta: {
+					finishReason: replyResponse.finishReason,
+					usage: replyResponse.usageMetadata,
+				},
+				lastRequestParams: requestParams,
 			};
 
 			// Save to history
@@ -545,10 +659,23 @@
       `;
 		}
 
+		// If the model finished because it hit max tokens, show a clear warning to the user
+		if (
+			generatedContent.meta &&
+			generatedContent.meta.finishReason === "MAX_TOKENS"
+		) {
+			html += `
+		    <div class="truncation-warning">
+		      Note: the model stopped early due to max token limit (MAX_TOKENS). The result may be truncated. Try increasing "max tokens" in the extension settings or shorten the prompt/context.
+		    </div>
+		  `;
+		}
+
 		html += `
-      <div class="action-buttons">
-        <button class="btn btn-secondary" id="regenerateBtn">regenerate</button>
-      </div>
+			<div class="action-buttons">
+				<button class="cda-btn cda-btn-secondary" id="regenerateBtn">regenerate</button>
+				<button class="cda-btn cda-btn-secondary" id="regenerateMoreBtn">regenerate with more tokens</button>
+			</div>
     </div>`;
 
 		contentDiv.innerHTML = html;
@@ -560,6 +687,9 @@
 		document
 			.getElementById("regenerateBtn")
 			?.addEventListener("click", regenerateContent);
+		document
+			.getElementById("regenerateMoreBtn")
+			?.addEventListener("click", regenerateWithMoreTokens);
 	}
 
 	async function handleCopy(e) {
@@ -610,6 +740,102 @@
 				"Please close and click the generate button again to regenerate."
 			);
 		}
+
+		async function regenerateWithMoreTokens() {
+			const contentDiv = document.getElementById("overlayContent");
+			if (contentDiv) {
+				contentDiv.innerHTML = `
+			  <div class="loading-state">
+				<div class="spinner"></div>
+				<p>regenerating with more tokens...</p>
+			  </div>
+			`;
+			}
+
+			if (!generatedContent || !generatedContent.lastRequestParams) {
+				showError(
+					"No previous generation parameters available to retry with more tokens."
+				);
+				return;
+			}
+
+			try {
+				const lastParams = generatedContent.lastRequestParams;
+				const currentMax = Number(lastParams.maxTokens ?? 1000);
+				const increment = 500;
+				const cap = 10000;
+				const newMax = Math.min(currentMax + increment, cap);
+				if (newMax === currentMax) {
+					showError("Already at maximum allowed tokens.");
+					return;
+				}
+
+				const newParams = Object.assign({}, lastParams, { maxTokens: newMax });
+
+				const action =
+					generatedContent.type === "main"
+						? "generateMainPost"
+						: "generateReply";
+
+				const response = await new Promise((resolve, reject) => {
+					try {
+						browser.runtime.sendMessage(
+							{ action, params: newParams },
+							(res) => {
+								if (browser.runtime.lastError) {
+									reject(
+										new Error(
+											"Extension context lost. Please refresh the page or reload the extension."
+										)
+									);
+								} else {
+									resolve(res);
+								}
+							}
+						);
+					} catch (e) {
+						reject(e);
+					}
+				});
+
+				if (!response || !response.success) {
+					showError(response?.error || "Failed to regenerate with more tokens");
+					return;
+				}
+
+				// Update generated content and metadata
+				generatedContent.content = response.text;
+				generatedContent.meta = {
+					finishReason: response.finishReason,
+					usage: response.usageMetadata,
+				};
+				generatedContent.lastRequestParams = newParams;
+
+				// Save to history similarly to initial generation
+				if (generatedContent.type === "main") {
+					await saveToHistory({
+						mainPost: response.text,
+						replies: [],
+						topic: (await CanvasParser.getMainDiscussionContext()).topic,
+						timestamp: Date.now(),
+					});
+				} else {
+					const mainContext = CanvasParser.getMainDiscussionContext();
+					await saveToHistory({
+						mainPost: "",
+						replies: [
+							{ content: response.text, replyTo: generatedContent.replyTo },
+						],
+						topic: mainContext.topic,
+						timestamp: Date.now(),
+					});
+				}
+
+				displayContent();
+			} catch (error) {
+				showError(`Error regenerating with more tokens: ${error.message}`);
+			}
+		}
 	}
 
 	function showError(message) {
@@ -618,12 +844,14 @@
 
 		contentDiv.innerHTML = `
       <div class="error-state">
-        <p class="error-message">${escapeHtml(message)}</p>
-        <button class="btn btn-primary" id="closeBtn">close</button>
+				<p class="error-message">${escapeHtml(message)}</p>
+				<button class="cda-btn cda-btn-primary" id="closeBtn">close</button>
       </div>
     `;
 
-		document.getElementById("closeBtn")?.addEventListener("click", closeOverlay);
+		document
+			.getElementById("closeBtn")
+			?.addEventListener("click", closeOverlay);
 	}
 
 	function escapeHtml(text) {
@@ -662,7 +890,9 @@
 								node.querySelector("[data-entry-id]") ||
 								node.hasAttribute("data-testid") ||
 								node.querySelector('[data-testid="discussion-topic-reply"]') ||
-								node.querySelector('[data-testid="discussion-root-entry-container"]')
+								node.querySelector(
+									'[data-testid="discussion-root-entry-container"]'
+								)
 							) {
 								shouldReinject = true;
 								break;

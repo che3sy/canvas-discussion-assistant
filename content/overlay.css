@@ -210,6 +210,16 @@
 	border-color: #00ff00;
 }
 
+/* truncation warning shown when model finishes due to token limit */
+.truncation-warning {
+	background: #331100;
+	color: #ffd1a3;
+	border: 1px solid #ff8c42;
+	padding: 8px 12px;
+	font-size: 12px;
+	border-radius: 4px;
+}
+
 .content-preview {
 	background: #000000;
 	padding: 12px;
@@ -229,7 +239,7 @@
 	justify-content: flex-end;
 }
 
-.btn {
+.cda-btn {
 	padding: 8px 16px;
 	border: 1px solid #ffffff;
 	font-size: 12px;
@@ -243,23 +253,23 @@
 	color: #000000;
 }
 
-.btn-primary:hover {
-	background: #cccccc;
-}
-
-.btn-secondary {
-	background: #000000;
-	color: #ffffff;
-}
-
-.btn-secondary:hover {
+.cda-btn-primary {
 	background: #ffffff;
 	color: #000000;
 }
 
-/* scrollbar */
-.overlay-content::-webkit-scrollbar {
-	width: 8px;
+.cda-btn-primary:hover {
+	background: #cccccc;
+}
+
+.cda-btn-secondary {
+	background: #000000;
+	color: #ffffff;
+}
+
+.cda-btn-secondary:hover {
+	background: #ffffff;
+	color: #000000;
 }
 
 .overlay-content::-webkit-scrollbar-track {

@@ -15,7 +15,11 @@
 	"content_scripts": [
 		{
 			"matches": ["https://*.instructure.com/courses/*/discussion_topics/*"],
-			"js": ["content/dom-parser.js", "content/canvas-injector.js"],
+			"js": [
+				"lib/browser-polyfill.js",
+				"content/dom-parser.js",
+				"content/canvas-injector.js"
+			],
 			"css": ["content/overlay.css"],
 			"run_at": "document_idle"
 		}
@@ -27,7 +31,7 @@
 	},
 
 	"background": {
-		"scripts": ["lib/gemini-api.js", "background/service-worker.js"]
+		"service_worker": "background/service-worker.js"
 	},
 
 	"web_accessible_resources": [

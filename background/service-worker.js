@@ -2,7 +2,40 @@
 // Handles API calls to avoid annoyinhg CORS issues
 
 // Cross-browser compatibility
-const browser = globalThis.browser || globalThis.chrome;
+// Ensure polyfills and helpers are loaded when running as an MV3 service worker.
+// Use chrome.runtime.getURL to build absolute extension URLs and import them
+// via importScripts so they are available synchronously in this scope.
+try {
+	if (
+		typeof chrome !== "undefined" &&
+		chrome.runtime &&
+		chrome.runtime.getURL
+	) {
+		const geminiUrl = chrome.runtime.getURL("lib/gemini-api.js");
+		importScripts(geminiUrl);
+	} else if (typeof importScripts === "function") {
+		// Fallback to relative paths (less reliable in some runtimes)
+		importScripts("../lib/gemini-api.js");
+	} else {
+		console.warn(
+			"Unable to import helper scripts: importScripts not available"
+		);
+	}
+} catch (err) {
+	// Log an explicit error — previously this was silent which made debugging
+	// "GeminiAPI is not defined" harder. Keep running so the service worker
+	// can still handle Claude requests and surface errors to the console.
+	console.error("Failed to load helper scripts in service worker:", err);
+}
+
+// Safe `browser` reference: prefer globalThis.browser if present (Firefox or polyfill),
+// otherwise fall back to chrome. Avoid referencing an undefined identifier.
+const browser =
+	typeof globalThis !== "undefined" && globalThis.browser
+		? globalThis.browser
+		: typeof chrome !== "undefined"
+		? chrome
+		: undefined;
 
 // Claude stuff
 const CLAUDE_API_URL = "https://api.anthropic.com/v1/messages";
@@ -119,7 +152,10 @@ async function generateMainPost(params) {
 		} else {
 			text = "No content in Gemini response";
 		}
-		return { success: true, text };
+
+		const finishReason = response?.candidates?.[0]?.finishReason;
+		const usageMetadata = response?.usageMetadata;
+		return { success: true, text, finishReason, usageMetadata };
 	} else {
 		const systemPrompt = `You are a student in a ${courseName} course responding to a discussion prompt. Generate content that will be edited by the student, so keep it natural and conversational.${
 			sideInstructions ? `\n\nAdditional instructions: ${sideInstructions}` : ""
@@ -193,7 +229,10 @@ async function generateReply(params) {
 		} else {
 			text = "No content in Gemini response";
 		}
-		return { success: true, text };
+
+		const finishReason = response?.candidates?.[0]?.finishReason;
+		const usageMetadata = response?.usageMetadata;
+		return { success: true, text, finishReason, usageMetadata };
 	} else {
 		const systemPrompt = `You are a student responding to a classmate's discussion post. This will be edited before posting, so keep it genuine and conversational.${
 			sideInstructions ? `\n\nAdditional instructions: ${sideInstructions}` : ""
